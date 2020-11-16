@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="utf-8">
+	<title>日志查询</title>
+	<script src="/static/jquery-3.2.1.min.js"></script>
+    </head>
+    <body>
+	<h3>Welcome!</h3>
+	<h3 id="servertime"></h3>
+	<div style="height:1000px">
+	<form name="myform" action="/query" method="post" target="iframe">
+	    <div>服务器:
+		<select id="serverselect" name="server" onchange="GetTime()">
+		</select>
+	    </div>
+	    <div>选择日志时间: 
+		<input type="date" name="logdate" value="2020-11-11">
+		<div>选择实时日志:<input type="checkbox" name="realtime" value="real" /></div>
+	    </div>
+	    <div>
+		日志类型:
+		<input type="radio" name="log" value="scene" checked="true">场景</label>
+		<input type="radio" name="log" value="session">会话</label>
+		<input type="radio" name="log" value="func">Func</label>
+		<input type="radio" name="log" value="commonstore">寄存</label>
+		<input type="radio" name="log" value="obj">道具</label>
+	    </div>
+	    <div>
+		<div id="keys">
+		    <div id="key0" style="display:inline-block">关键字1:<input type="text" class="keyclass" name="key0"></div>
+		</div>
+		<div id="exkeys">
+		    <div id="exkey0" style="display:inline-block">排除关键字1:<input type="text" class="keyclass" name="exkey0"></div>
+		</div>
+	    </div>
+	    <div>
+		<input type="button" id="btn" value="查询" onclick="OnQuery()">
+	    </div>
+	</form>
+	<iframe id="iframe" name="iframe" style="display:none;"></iframe>
+	<pre id="result"></pre>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="/static/main.js"></script>
+    </body>
+</html>
