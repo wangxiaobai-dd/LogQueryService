@@ -1,4 +1,5 @@
 {
     "场景":"scenelog",
-    "会话":"sessionlog"
+    "会话":"sessionlog",
+    "Func":"funclog"
 }

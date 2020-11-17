@@ -1,7 +1,7 @@
 
 var serverTimestamp = 0;
 var serverOpen = false;
-window.onload = LoadSelect();
+window.onload = function(){ LoadSelect(); LoadLogRadio(); }
 var perMin = setInterval(function(){ GetTime(); }, 60000);
 var perSec = setInterval(function(){ RefreshTime(); }, 1000);
 var initTime = setTimeout("GetTime()", 1000);
@@ -46,14 +46,25 @@ function LoadSelect(){
 
 function LoadLogRadio(){
     $.getJSON("static/logpath.json", function(data){
-	
-    }
+	var radioStr = "";
+	var i = 0;
+	$.each(data, function (pathName){
+	    console.log(pathName);
+	    radioStr += "<input type='radio' name='log' value='" + data[pathName] + "'";
+	    if(i == 0)
+		radioStr += " checked='true'";
+	    radioStr += ">";
+	    radioStr += pathName + " ";
+	    ++i;
+	});
+	$("#radios").append(radioStr);                 
+    })
 }
 
 function RefreshTime(){
     if(serverOpen){
 	serverTimestamp++
-	$("#servertime").html(TimestampToDate(serverTimestamp));
+	$("#servertime").html("服务器时间: " + TimestampToDate(serverTimestamp));
     }
 }
 
@@ -69,7 +80,7 @@ function GetTime(){
 	    success:function(result){
 		serverOpen = true
 		serverTimestamp = result;
-		$("#servertime").html(TimestampToDate(serverTimestamp));
+		$("#servertime").html("服务器时间: " + TimestampToDate(serverTimestamp));
 	    },
 	    error:function(){
 		serverOpen = false
@@ -110,7 +121,12 @@ function keyChange(){
 	$(".keyclass").on('input propertychange', keyChange);
     }
     else if($(this).val() == "" && $("#"+nextIdStr).length != 0){
-	$("#"+nextIdStr).remove();
+	var delIdNum = nextIdNum;
+	while($("#"+type+delIdNum).length != 0)
+	{
+	    $("#"+type+delIdNum).remove();
+	    ++delIdNum;
+	}
     }
 }
 
