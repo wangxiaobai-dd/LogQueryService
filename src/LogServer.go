@@ -15,7 +15,7 @@ func queryLog(w http.ResponseWriter, r *http.Request) {
 	// 查询字符串
 	execStr := "grep '" + r.Form["key0"][0] + "' " + r.Form["log"][0] + "*.log"
 	// 日期
-	if _, ok := r.Form["realTime"]; !ok {
+	if _, ok := r.Form["realtime"]; !ok {
 		date := r.Form["logdate"][0]
 		dateArr := strings.Split(date, "-")
 		year := dateArr[0][2:]
@@ -46,9 +46,9 @@ func queryLog(w http.ResponseWriter, r *http.Request) {
 	output, err := cmd.Output()
 	if err != nil {
 		if strings.Index(err.Error(), "1") != -1 {
-			fmt.Fprintf(w, "无查询结果")
+			fmt.Fprintf(w, "无查询结果。")
 		} else if strings.Index(err.Error(), "2") != -1 {
-			fmt.Fprintf(w, "没有此日志文件")
+			fmt.Fprintf(w, "没有此日志文件!")
 		}
 		fmt.Println(err)
 	} else {
@@ -58,7 +58,7 @@ func queryLog(w http.ResponseWriter, r *http.Request) {
 
 func getTime(w http.ResponseWriter, r *http.Request) {
 	timestamp := time.Now().Unix()
-	fmt.Println(timestamp)
+	//fmt.Println(timestamp)
 	fmt.Fprintf(w, strconv.FormatInt(timestamp, 10))
 }
 

@@ -4,35 +4,34 @@
 	<meta charset="utf-8">
 	<title>日志查询</title>
 	<script src="/static/jquery-3.2.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="static/main.css">
     </head>
     <body>
-	<h3 style="color:red">Welcome!</h3>
-	<h4 id="servertime" style="color:blue"></h4>
+	<h3 id="title">Welcome!</h3>
+	<h4 id="servertime"></h4>
 	<form name="myform" action="/query" method="post" target="iframe">
 	    <div>服务器:
 		<select id="serverselect" name="server" onchange="GetTime()">
 		</select>
 	    </div>
-	    <div>选择日志时间: 
-		<input type="date" name="logdate" value="2020-11-11">
-		<div>选择实时日志:<input type="checkbox" name="realtime" value="real" /></div>
-	    </div>
+	    <div>选择日志时间: <input type="date" id="logdate" name="logdate" value="2020-11-11"></div>
+	    <div>选择实时日志:<input type="checkbox" name="realtime" value="real" checked="true"/></div>
 	    <div id="radios">
 		日志类型:
 	    </div>
 	    <div>
 		<div id="keys">
-		    <div id="key0" style="display:inline-block">关键字1:<input type="text" class="keyclass" name="key0"></div>
+		    <div id="key0" class="keydiv">关键字1:<input type="text" class="keyclass" name="key0">&nbsp</div>
 		</div>
 		<div id="exkeys">
-		    <div id="exkey0" style="display:inline-block">排除关键字1:<input type="text" class="keyclass" name="exkey0"></div>
+		    <div id="exkey0" class="keydiv">排除关键字1:<input type="text" class="keyclass" name="exkey0">&nbsp</div>
 		</div>
 	    </div>
 	    <div>
 		<input type="button" id="btn" value="查询" onclick="OnQuery()">
 	    </div>
 	</form>
-	<iframe id="iframe" name="iframe" style="display:none;"></iframe>
+	<iframe id="iframe" name="iframe"></iframe>
 	<pre id="result"></pre>
 	<script type="text/javascript" charset="utf-8" src="/static/main.js"></script>
     </body>

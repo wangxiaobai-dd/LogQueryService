@@ -1,0 +1,16 @@
+wwww
+wwww
+qas
+wq
+ubuntu@VM-4-11-ubuntu:~/LogQueryService/src$ go run LogServer.go
+1605583104
+1605583107
+[2020 11 11]
+20
+grep 'w' scenelog*.log.201111*
+exit status 2
+grep 'w' scenelog*.log
+exit status 2
+1605583133
+grep 'w' scenelog*.log
+

@@ -1,0 +1,39 @@
+#btn
+{
+    width:100px;
+    height:30px;
+}
+
+#result
+{
+    font-size:20px;
+}
+
+.keydiv
+{
+    display:inline-block;
+}
+
+#iframe
+{
+    display:none;
+}
+
+#title
+{
+    color:red;
+    margin-bottom:0px;
+}
+
+#servertime
+{
+    color:blue;
+    margin-top:20px;
+    margin-bottom:30px;
+}
+
+div
+{
+    font-size:20px;
+    margin-bottom:5px;
+}

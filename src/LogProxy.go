@@ -44,10 +44,10 @@ func forward(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "请输入查询关键字!")
 		return
 	}
-	fmt.Println(r.Form)
+	// fmt.Println(r.Form)
 
 	server := r.Form["server"][0]
-	fmt.Println("server:", server)
+	// fmt.Println("server:", server)
 	ip, ok := serverMap[server]
 	if !ok {
 		fmt.Fprintf(w, "无此服务器")
