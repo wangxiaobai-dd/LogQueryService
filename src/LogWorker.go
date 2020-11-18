@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/axgle/mahonia"
 	"log"
 	"net/http"
 	"os/exec"
@@ -13,6 +14,11 @@ import (
 func queryLog(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	// 查询字符串
+	/*
+		如果需要转gbk 先将key转换
+		enc := mahonia.NewEncoder("GBK")
+		key := enc.ConvertString(r.Form["key0"][0])
+	*/
 	execStr := "grep '" + r.Form["key0"][0] + "' " + r.Form["log"][0] + "*.log"
 	// 日期
 	if _, ok := r.Form["realtime"]; !ok {
@@ -54,6 +60,15 @@ func queryLog(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintf(w, string(output))
 	}
+}
+
+//src为要转换的字符串，srcCode为待转换的编码格式，targetCode为要转换的编码格式
+func convertToByte(src string, srcCode string, targetCode string) []byte {
+	srcCoder := mahonia.NewDecoder(srcCode)
+	srcResult := srcCoder.ConvertString(src)
+	tagCoder := mahonia.NewDecoder(targetCode)
+	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
+	return cdata
 }
 
 func getTime(w http.ResponseWriter, r *http.Request) {
