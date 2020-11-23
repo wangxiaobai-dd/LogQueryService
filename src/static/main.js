@@ -1,14 +1,18 @@
 
 var serverTimestamp = 0;
 var serverOpen = false;
-window.onload = function(){ LoadSelect(); LoadLogRadio(); }
+var myIP = "";
+window.onload = function(){ 
+	GetMyIp();
+	LoadLogRadio();
+}
 var perMin = setInterval(function(){ GetTime(); }, 60000);
 var perSec = setInterval(function(){ RefreshTime(); }, 1000);
 var initTime = setTimeout("GetTime()", 1000);
 var initDate = "2020-11-18";
 
 function OnQuery() {
-    var formData = $("form").serialize();
+    var formData = $("#queryform").serialize();
     $.ajax(
 	{   url:"/query",
 	    type: "post",
@@ -25,6 +29,19 @@ function OnQuery() {
     console.log(formData)
 };
 
+function GetMyIp(){
+    $.ajax(
+	{   url:"/getip",
+	    type: "post",
+	    async: true,
+	    success:function(result){
+		console.log(result)
+		myIP = result
+		LoadSelect(); 
+	    }
+	});
+}
+
 function LoadSelect(){
     $.getJSON("static/server.json", function(data){
 	console.log(data); 
@@ -32,6 +49,7 @@ function LoadSelect(){
 	var i = 0;
 	$.each(data, function (serverName){
 	    console.log(serverName);
+	if(serverName.indexOf("qa") != -1 || serverName.indexOf(myIP) != -1 || serverName.indexOf("全局") != -1){
 	    optionStr += "<option value='" + serverName + "'";
 	    if(i == 0)
 		optionStr += " selected='selected'";
@@ -39,6 +57,7 @@ function LoadSelect(){
 	    optionStr += serverName;
 	    optionStr += "</option>";
 	    ++i;
+	}
 	});
 	 $("#serverselect").html(optionStr);                 
     })
@@ -60,6 +79,53 @@ function LoadLogRadio(){
 	});
 	$("#radios").append(radioStr);                 
     })
+}
+
+function OnAddServer(){
+	$("#logsrvname").val("");
+	$("#logsrvpath").val("")
+	$("#model").css("display", "block");
+}
+
+function OnEnsureBtn(){
+	if($("#logsrvname").val() == ""){
+		alert("标识不能为空!")
+		return;
+	}
+	if(!CheckIP($("#logsrvip").val()))
+	{
+		alert("IP地址不合法!");
+		return;
+	}
+	if($("#logsrvpath").val() == ""){
+		alert("日志路径不能为空!")
+		return;
+	}
+	var formData = $("#addform").serialize();
+	$.ajax(
+		{   url:"/addsrv",
+			type: "post",
+			async: true,
+			data: formData,
+			success:function(result){
+				console.log(result);	
+				$("#serverselect").append(result);
+			}
+		});
+	$("#model").css("display", "none");
+	alert("添加成功！请查看服务器选择列表")
+}
+
+function CheckIP(value){
+	var exp=/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+	var reg = value.match(exp);
+	if(reg == null)
+		return false;
+	return true;
+}
+
+function OnCancelBtn(){
+	$("#model").css("display", "none");
 }
 
 function RefreshTime(){

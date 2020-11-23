@@ -9,10 +9,11 @@
     <body>
 	<h3 id="title">Welcome!</h3>
 	<h4 id="servertime"></h4>
-	<form name="myform" action="/query" method="post" target="iframe">
+	<form id="queryform" name="myform" action="/query" method="post" target="iframe">
 	    <div>服务器:
 		<select id="serverselect" name="server" onchange="GetTime()">
 		</select>
+		<input type="button" id="addserver" value="添加服务器" onclick="OnAddServer()">
 	    </div>
 	    <div>选择日志时间: <input type="date" id="logdate" name="logdate" value="2020-11-11"></div>
 	    <div>选择实时日志:<input type="checkbox" name="realtime" value="real" checked="true"/></div>
@@ -31,6 +32,26 @@
 		<input type="button" id="btn" value="查询" onclick="OnQuery()">
 	    </div>
 	</form>
+	<div id="model">
+		<div class="modal-content">
+			<div class="modal-header">
+				<span class="close"> </span>
+			</div>
+			<div class="modal-body">
+				<form id="addform" action="/addsrv" name="addserver" target="iframe">
+					<div>自定义标识: <input type="text" id="logsrvname" name="logsrvname"></div>
+					<div>服务器ip: <input type="text" id="logsrvip" name="logsrvip"></div>
+					<div>日志路径: <input type="text" id="logsrvpath" name="logsrvpath" placeholder="~/tmp/xxx.log 则输入~/tmp"></div>
+					<div>
+						<span class="addspan"><input type="button" id="ensurebtn" value="确定" onclick="OnEnsureBtn()"></span>
+						<span class="addspan"><input type="button" id="cancelBtn" value="取消" onclick="OnCancelBtn()"> </span>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
 	<iframe id="iframe" name="iframe"></iframe>
 	<pre id="result"></pre>
 	<script type="text/javascript" charset="utf-8" src="/static/main.js"></script>

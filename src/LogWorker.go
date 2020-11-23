@@ -19,10 +19,10 @@ func queryLog(w http.ResponseWriter, r *http.Request) {
 		enc := mahonia.NewEncoder("GBK")
 		key := enc.ConvertString(r.Form["key0"][0])
 	*/
-	execStr := "grep '" + r.Form["key0"][0] + "' " + r.Form["log"][0] + "*.log"
+	execStr := "grep '" + r.FormValue("key0") + "' " + r.FormValue("log") + "*.log"
 	// 日期
 	if _, ok := r.Form["realtime"]; !ok {
-		date := r.Form["logdate"][0]
+		date := r.FormValue("logdate")
 		dateArr := strings.Split(date, "-")
 		year := dateArr[0][2:]
 		execStr = execStr + "." + year + dateArr[1] + dateArr[2] + "*"
