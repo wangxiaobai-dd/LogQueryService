@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/axgle/mahonia"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
@@ -77,9 +78,19 @@ func getTime(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, strconv.FormatInt(timestamp, 10))
 }
 
+func syncWatch(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Read failed:", err)
+	}
+	defer r.Body.Close()
+	log.Println("b:", string(b))
+}
+
 func main() {
 	http.HandleFunc("/query", queryLog)
 	http.HandleFunc("/gettime", getTime)
+	http.HandleFunc("/syncwatch", syncWatch)
 	err := http.ListenAndServe(":9001", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)

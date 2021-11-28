@@ -13,7 +13,9 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
+	"time"
 )
 
 const (
@@ -29,6 +31,13 @@ const (
 
 var serverMap = make(map[string]interface{})
 var customPathMap = make(map[string]string)
+
+/*
+type IP struct {
+	Address string `json:"address"`
+	Port    string `json:"port"`
+}
+*/
 
 func loadConfig() bool {
 	data, err := ioutil.ReadFile("static/server.json")
@@ -134,11 +143,31 @@ func forward(w http.ResponseWriter, r *http.Request) {
 	proxy.ServeHTTP(w, r)
 }
 
+func syncWatch() {
+	url := "http://127.0.0.1:9001/syncwatch"
+	contentType := "application/json;charset=utf-8"
+	//b := "hello"
+	//b := []byte("Hello, Server")
+	//body := bytes.NewBuffer(b)
+	str := strings.NewReader("hello")
+	resp, err := http.Post(url, contentType, str)
+	if err != nil {
+		log.Println("Post failed:", err)
+		return
+	}
+	defer resp.Body.Close()
+}
+
 func main() {
 	if !loadConfig() {
 		return
 	}
 	fmt.Println(serverMap)
+
+	ip, _ := serverMap["qa68"]
+	fmt.Println(reflect.TypeOf(ip).Name() == "string")
+	ip, _ = serverMap["qa70"]
+	fmt.Println(ip.(map[string]interface{})["address"].(string) + ip.(map[string]interface{})["port"].(string))
 
 	http.HandleFunc("/", showPage)
 	http.HandleFunc("/addsrv", addSrv)
@@ -146,6 +175,16 @@ func main() {
 	http.HandleFunc("/query", forward)
 	http.HandleFunc("/gettime", forward)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
+	// 同步监控信息 与日志无关
+	ticker := time.NewTicker(time.Second * 2)
+	defer ticker.Stop()
+	go func() {
+		for range ticker.C {
+			syncWatch()
+		}
+	}()
+
 	err := http.ListenAndServe(":9000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
